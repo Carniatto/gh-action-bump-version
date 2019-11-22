@@ -1,13 +1,13 @@
 name: "Bump Version"
 
 on:
-  push:
+  merge:
     branches:
-      - "master"
+      - "develop"
 
 jobs:
   bump-version:
-    name: "Bump Version on master"
+    name: "Bump Version on develop"
     runs-on: ubuntu-latest
 
     steps:
@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: 8.10.0
       - name: "Automated Version Bump"
-        uses: "phips28/gh-action-bump-version@master"
+        uses: "carniatto/gh-action-bump-version@master"
         with:
           tag-prefix: ''
         env:

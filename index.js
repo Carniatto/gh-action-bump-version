@@ -15,18 +15,17 @@ Toolkit.run(async tools => {
     return
   }
 
-  let version = 'patch'
+  let version = 'prepatch'
   if (messages.map(message => message.includes('BREAKING CHANGE')).includes(true)) {
-    version = 'major'
-  } else if (messages.map(message => message.toLowerCase().startsWith('feat')).includes(true)) {
     version = 'minor'
+  } else if (messages.map(message => message.toLowerCase().startsWith('feat')).includes(true)) {
+    version = 'patch'
   }
 
   try {
     const current = pkg.version.toString()
     // set git user
-    await tools.runInWorkspace('git', ['config', 'user.name', '"Automated Version Bump"'])
-    await tools.runInWorkspace('git', ['config', 'user.email', '"gh-action-bump-version@users.noreply.github.com"'])
+    await tools.runInWorkspace('git', ['config', 'user.name', '"riaktr-account"'])
 
     const currentBranch = /refs\/[a-zA-Z]+\/(.*)/.exec(process.env.GITHUB_REF)[1]
     console.log('currentBranch:', currentBranch)
@@ -51,9 +50,9 @@ Toolkit.run(async tools => {
 
     const remoteRepo = `https://${process.env.GITHUB_ACTOR}:${process.env.GITHUB_TOKEN}@github.com/${process.env.GITHUB_REPOSITORY}.git`
     // console.log(Buffer.from(remoteRepo).toString('base64'))
-    await tools.runInWorkspace('git', ['tag', newVersion])
-    await tools.runInWorkspace('git', ['push', remoteRepo, '--follow-tags'])
-    await tools.runInWorkspace('git', ['push', remoteRepo, '--tags'])
+    // await tools.runInWorkspace('git', ['tag', newVersion])
+    await tools.runInWorkspace('git', ['push', remoteRepo])
+    await tools.runInWorkspace('git', ['push', remoteRepo])
   } catch (e) {
     tools.log.fatal(e)
     tools.exit.failure('Failed to bump version')
